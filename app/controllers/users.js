@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/users')
+const Question = require('../models/questions')
 const { secret }  = require('../config')
 
 class UserCtl {
@@ -134,6 +135,10 @@ class UserCtl {
     const user = await User.findById(ctx.params.id).select('+followingTopics').populate('followingTopics');
     if (!user) { ctx.throw(404, '用户不存在'); }
     ctx.body = user.followingTopics;
+  }
+  async listQuestions(ctx) {
+    const questions = await Question.find({ questioner: ctx.params.id})
+    ctx.body = questions
   }
 }
 module.exports = new UserCtl()
