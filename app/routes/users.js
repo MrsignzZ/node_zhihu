@@ -5,11 +5,15 @@ const { find, findById, create, update, delete: del,
   login, checkOwner, listFollowing, listFollowers,
   follow, unfollow, checkUserExist,
   followTopic, unfollowTopic, listFollowingTopics,
-  listQuestions
+  listQuestions,
+  listLikingAnswers, likeAnswer, unlikeAnswer,
+  listDislikingAnswers, dislikeAnswer, undislikeAnswer,
+  listCollectingAnswers, collectAnswer, uncollectAnswer, 
 }
   = require('../controllers/users')
 
 const { checkTopicExist } = require('../controllers/topics')
+const { checkAnswerExist } = require('../controllers/answers')
 const { secret } = require('../config')
 const auth = jwt({ secret })
 
@@ -38,4 +42,15 @@ router.get('/:id/followingTopics', listFollowingTopics)
 
 // 问题列表
 router.get('/:id/questions', listQuestions)
+
+// 赞和取消赞
+router.put('/likingAnswers/:id', auth, checkAnswerExist, likeAnswer, undislikeAnswer)
+router.delete('/likingAnswers/:id', auth, checkAnswerExist, unlikeAnswer)
+router.get('/:id/likingAnswers', listLikingAnswers)
+
+// 踩和取消踩
+router.put('/dislikingAnswers/:id', auth, checkAnswerExist, dislikeAnswer, unlikeAnswer)
+router.delete('/dislikingAnswers/:id', auth, checkAnswerExist, undislikeAnswer)
+router.get('/:id/dislikingAnswers', listDislikingAnswers)
+
 module.exports = router
